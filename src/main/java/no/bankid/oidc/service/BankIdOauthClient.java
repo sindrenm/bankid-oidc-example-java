@@ -1,5 +1,16 @@
 package no.bankid.oidc.service;
 
+import org.glassfish.jersey.client.ClientConfig;
+import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+
+import javax.ws.rs.client.Client;
+import javax.ws.rs.client.ClientBuilder;
+import javax.ws.rs.client.Entity;
+import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.MultivaluedHashMap;
+import javax.ws.rs.core.MultivaluedMap;
+import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.nio.charset.Charset;
@@ -27,5 +38,27 @@ public class BankIdOauthClient {
         } catch (UnsupportedEncodingException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    public static void endAuthentication(String code) {
+        HttpAuthenticationFeature basicAuth = HttpAuthenticationFeature.
+                basicBuilder()
+                .nonPreemptive()
+                .credentials("JavaClient", "1234")
+                .build();
+
+        ClientConfig clientConfig = new ClientConfig();
+        clientConfig.register(basicAuth);
+
+        Client client = ClientBuilder.newClient(clientConfig);
+
+        WebTarget target = client.target("https://prototype.bankidnorge.no").path("bankid-oauth/oauth/token");
+
+        MultivaluedMap<String, String> formData = new MultivaluedHashMap<String, String>();
+        formData.add("code", code);
+        formData.add("grant_type", "authorization_code");
+
+        Response response = target.request().post(Entity.form(formData));
+        System.out.println(response.toString());
     }
 }

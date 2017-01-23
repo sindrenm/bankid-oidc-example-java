@@ -24,6 +24,10 @@ public class CallBackServlet extends HttpServlet {
                 .append("<p>A callback has been made! With a code.</p>")
                 .append("</body></html");
 
+        String code = request.getParameter("code");
+
+        BankIdOauthClient.endAuthentication(code);
+
         response.getOutputStream().print(responseHtml.toString());
     }
 }
