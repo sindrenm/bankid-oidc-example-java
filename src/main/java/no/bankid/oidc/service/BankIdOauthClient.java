@@ -2,17 +2,16 @@ package no.bankid.oidc.service;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.json.JSONObject;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
-import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
 import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.UUID;
 
@@ -40,7 +39,7 @@ public class BankIdOauthClient {
         }
     }
 
-    public static void endAuthentication(String code) {
+    public static JSONObject endAuthentication(String code) {
         HttpAuthenticationFeature basicAuth = HttpAuthenticationFeature.
                 basicBuilder()
                 .nonPreemptive()
@@ -59,6 +58,9 @@ public class BankIdOauthClient {
         formData.add("grant_type", "authorization_code");
 
         Response response = target.request().post(Entity.form(formData));
-        System.out.println(response.toString());
+
+        JSONObject json = new JSONObject(response.readEntity(String.class));
+
+        return json;
     }
 }

@@ -3,6 +3,7 @@ package no.bankid.oidc.web; /**
  */
 
 import no.bankid.oidc.service.BankIdOauthClient;
+import org.json.JSONObject;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -26,7 +27,13 @@ public class CallBackServlet extends HttpServlet {
 
         String code = request.getParameter("code");
 
-        BankIdOauthClient.endAuthentication(code);
+        JSONObject json = BankIdOauthClient.endAuthentication(code);
+
+        String access_token = json.getString("access_token");
+        String id_token = json.getString("id_token");
+
+        System.out.println("access_token: " + access_token);
+        System.out.println("id_token: " + id_token);
 
         response.getOutputStream().print(responseHtml.toString());
     }
