@@ -20,6 +20,8 @@ public class LoginServlet extends HttpServlet {
 
         String redirectUrl = new BankIdOauthClient().startAuthentication();
 
+        System.out.println(redirectUrl);
+
         response.sendRedirect(redirectUrl);
     }
 }

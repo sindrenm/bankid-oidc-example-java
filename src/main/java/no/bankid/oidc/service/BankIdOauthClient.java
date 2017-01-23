@@ -1,6 +1,7 @@
 package no.bankid.oidc.service;
 
 import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.nio.charset.Charset;
 import java.util.UUID;
 
@@ -15,7 +16,7 @@ public class BankIdOauthClient {
         String state = UUID.randomUUID().toString();
 
         final String url = String.format("%s?client_id=%s&redirect_uri=%s&response_type=code&scope=openid&state=%s&nonce=%s",
-                "https://preprod.bankidapis.no/oidc/oauth/authorize", "Postman", "localhost:8080/redirect", encoded(state), "somecorrelationnonce");
+                "https://prototype.bankidnorge.no/bankid-oauth/oauth/authorize", "JavaClient", encoded("http://localhost:8080/callback"), encoded(state), "somecorrelationnonce");
 
         return url;
     }
