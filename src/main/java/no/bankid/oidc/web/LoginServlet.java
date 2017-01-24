@@ -16,11 +16,8 @@ public class LoginServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        StringBuilder responseHtml = new StringBuilder();
 
-        String redirectUrl = new BankIdOauthClient().startAuthentication();
-
-        System.out.println(redirectUrl);
+        String redirectUrl = BankIdOauthClient.getInstance().createAuthenticationUrl();
 
         response.sendRedirect(redirectUrl);
     }

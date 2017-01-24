@@ -22,13 +22,48 @@ import static java.net.URLEncoder.encode;
  */
 public class BankIdOauthClient {
 
-    public String startAuthentication() {
+    public static final String OAUTH_ROOT_URL = "https://prototype.bankidnorge.no/bankid-oauth";
+    public static final String CONFIG_URL = "oauth/.well-known/openid-configuration";
+
+    private final String authorizationEndpoint;
+    private final String jwks_uri;
+    private final String issuer;
+    private final String token_endpoint;
+    private final String userinfo_endpoint;
+
+    private static BankIdOauthClient bankIdOauthClient;
+
+    public static BankIdOauthClient getInstance() {
+        if (bankIdOauthClient == null) {
+            bankIdOauthClient = new BankIdOauthClient();
+        }
+        return bankIdOauthClient;
+    }
+
+    private BankIdOauthClient() {
+        JSONObject configuration = fetchConfiguration();
+
+        this.authorizationEndpoint = configuration.getString("authorization_endpoint");
+        jwks_uri = configuration.getString("jwks_uri");
+        issuer = configuration.getString("issuer");
+        token_endpoint = configuration.getString("token_endpoint");
+        userinfo_endpoint = configuration.getString("userinfo_endpoint");
+    }
+
+    private JSONObject fetchConfiguration() {
+        Client client = ClientBuilder.newClient();
+        WebTarget target = client.target(OAUTH_ROOT_URL).path(CONFIG_URL);
+
+        Response response = target.request().get();
+        return new JSONObject(response.readEntity(String.class));
+    }
+
+
+    public String createAuthenticationUrl() {
         String state = UUID.randomUUID().toString();
 
-        final String url = String.format("%s?client_id=%s&redirect_uri=%s&response_type=code&scope=openid&state=%s&nonce=%s",
-                "https://prototype.bankidnorge.no/bankid-oauth/oauth/authorize", "JavaClient", encoded("http://localhost:8080/callback"), encoded(state), "somecorrelationnonce");
-
-        return url;
+        return String.format("%s?client_id=%s&redirect_uri=%s&response_type=code&scope=openid&state=%s&nonce=%s",
+                authorizationEndpoint, "JavaClient", encoded("http://localhost:8080/callback"), encoded(state), "somecorrelationnonce");
     }
 
     public static String encoded(String s) {
