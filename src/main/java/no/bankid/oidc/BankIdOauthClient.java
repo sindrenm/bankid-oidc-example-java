@@ -1,4 +1,4 @@
-package no.bankid.oidc.service;
+package no.bankid.oidc;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;

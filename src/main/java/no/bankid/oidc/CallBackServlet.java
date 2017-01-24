@@ -1,8 +1,8 @@
-package no.bankid.oidc.web; /**
+package no.bankid.oidc; /**
  * Created by kristofferskaret on 20.01.2017.
  */
 
-import no.bankid.oidc.service.BankIdOauthClient;
+import no.bankid.oidc.BankIdOauthClient;
 import org.json.JSONObject;
 
 import javax.servlet.annotation.WebServlet;

@@ -1,4 +1,4 @@
-package no.bankid.oidc.web; /**
+package no.bankid.oidc; /**
  * Created by kristofferskaret on 20.01.2017.
  */
 
