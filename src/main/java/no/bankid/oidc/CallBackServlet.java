@@ -17,24 +17,13 @@ public class CallBackServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
-        StringBuilder responseHtml = new StringBuilder();
-
-        responseHtml.append("<html>")
-                .append("<head></head><body>")
-                .append("<h1>Callback</h1>")
-                .append("<p>A callback has been made! With a code.</p>")
-                .append("</body></html");
 
         String code = request.getParameter("code");
 
-        JSONObject json = BankIdOauthClient.getInstance().endAuthentication(code);
+        User user = BankIdOauthClient.getInstance().endAuthentication(code);
 
-        String access_token = json.getString("access_token");
-        String id_token = json.getString("id_token");
+        request.getSession().setAttribute("user", user);
 
-        System.out.println("access_token: " + access_token);
-        System.out.println("id_token: " + id_token);
-
-        response.getOutputStream().print(responseHtml.toString());
+        response.sendRedirect("/");
     }
 }

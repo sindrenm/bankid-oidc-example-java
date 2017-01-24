@@ -14,14 +14,30 @@ public class WelcomeServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
+
+        User user = (User) request.getSession().getAttribute("user");
+
         StringBuilder responseHtml = new StringBuilder();
 
-        responseHtml.append("<html>")
-                .append("<head></head><body>")
-                .append("<h1>Welcome</h1>")
-                .append("<p>Click login to login</p>")
-                .append("<a href=\"/login\">Login</a>")
-                .append("</body></html");
+        if (user == null) {
+            responseHtml.append("<html>")
+                    .append("<head></head><body>")
+                    .append("<h1>Welcome</h1>")
+                    .append("<p>Click login to login</p>")
+                    .append("<a href=\"/login\">Login</a>")
+                    .append("</body></html");
+        } else {
+            responseHtml.append("<html>")
+                    .append("<head></head><body>")
+                    .append("<h1>Welcome</h1>")
+                    .append("<h2>Access token</h2>")
+                    .append(String.format("<p>%s</p>", user.getAccessToken()))
+                    .append("<h2>Id token</h2>")
+                    .append(String.format("<p>%s</p>", user.getIdToken()))
+                    .append("<a href=\"/logout\">Logout</a>")
+                    .append("</body></html");
+        }
+
 
         response.getOutputStream().print(responseHtml.toString());
     }
