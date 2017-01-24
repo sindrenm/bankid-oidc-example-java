@@ -27,7 +27,7 @@ public class CallBackServlet extends HttpServlet {
 
         String code = request.getParameter("code");
 
-        JSONObject json = BankIdOauthClient.endAuthentication(code);
+        JSONObject json = BankIdOauthClient.getInstance().endAuthentication(code);
 
         String access_token = json.getString("access_token");
         String id_token = json.getString("id_token");

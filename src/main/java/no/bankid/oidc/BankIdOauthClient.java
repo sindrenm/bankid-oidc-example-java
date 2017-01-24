@@ -2,6 +2,7 @@ package no.bankid.oidc;
 
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import javax.ws.rs.client.Client;
@@ -22,16 +23,16 @@ import static java.net.URLEncoder.encode;
  */
 public class BankIdOauthClient {
 
-    public static final String OAUTH_ROOT_URL = "https://prototype.bankidnorge.no/bankid-oauth";
-    public static final String CONFIG_URL = "oauth/.well-known/openid-configuration";
+    public static final String CONFIG_URL = "https://prototype.bankidnorge.no/bankid-oauth/oauth/.well-known/openid-configuration";
 
     private final String authorizationEndpoint;
-    private final String jwks_uri;
     private final String issuer;
     private final String token_endpoint;
     private final String userinfo_endpoint;
 
     private static BankIdOauthClient bankIdOauthClient;
+    private final String jwkKeyType;
+    private final String jwkKey;
 
     public static BankIdOauthClient getInstance() {
         if (bankIdOauthClient == null) {
@@ -41,20 +42,26 @@ public class BankIdOauthClient {
     }
 
     private BankIdOauthClient() {
-        JSONObject configuration = fetchConfiguration();
+        JSONObject configuration = getJsonResponse(CONFIG_URL);
 
         this.authorizationEndpoint = configuration.getString("authorization_endpoint");
-        jwks_uri = configuration.getString("jwks_uri");
-        issuer = configuration.getString("issuer");
-        token_endpoint = configuration.getString("token_endpoint");
-        userinfo_endpoint = configuration.getString("userinfo_endpoint");
+        this.issuer = configuration.getString("issuer");
+        this.token_endpoint = configuration.getString("token_endpoint");
+        this.userinfo_endpoint = configuration.getString("userinfo_endpoint");
+
+        String jwks_uri = configuration.getString("jwks_uri");
+
+        JSONObject jwksConfig = getJsonResponse(jwks_uri);
+
+        JSONArray keys = jwksConfig.getJSONArray("keys");
+        JSONObject key = keys.getJSONObject(0);
+        this.jwkKeyType = key.getString("kty");
+        this.jwkKey = key.getString("n");
     }
 
-    private JSONObject fetchConfiguration() {
+    private JSONObject getJsonResponse(String url) {
         Client client = ClientBuilder.newClient();
-        WebTarget target = client.target(OAUTH_ROOT_URL).path(CONFIG_URL);
-
-        Response response = target.request().get();
+        Response response = client.target(url).request().get();
         return new JSONObject(response.readEntity(String.class));
     }
 
@@ -74,7 +81,7 @@ public class BankIdOauthClient {
         }
     }
 
-    public static JSONObject endAuthentication(String code) {
+    public JSONObject endAuthentication(String code) {
         HttpAuthenticationFeature basicAuth = HttpAuthenticationFeature.
                 basicBuilder()
                 .nonPreemptive()
@@ -86,7 +93,7 @@ public class BankIdOauthClient {
 
         Client client = ClientBuilder.newClient(clientConfig);
 
-        WebTarget target = client.target("https://prototype.bankidnorge.no").path("bankid-oauth/oauth/token");
+        WebTarget target = client.target(token_endpoint);
 
         MultivaluedMap<String, String> formData = new MultivaluedHashMap<String, String>();
         formData.add("code", code);
@@ -94,8 +101,6 @@ public class BankIdOauthClient {
 
         Response response = target.request().post(Entity.form(formData));
 
-        JSONObject json = new JSONObject(response.readEntity(String.class));
-
-        return json;
+        return new JSONObject(response.readEntity(String.class));
     }
 }
