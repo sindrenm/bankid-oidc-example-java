@@ -29,9 +29,9 @@ public class BankIdOIDCClient {
     private final String authorizationEndpoint;
     private final String token_endpoint;
     private final String userinfo_endpoint;
+    private final JWTHandler JWTHandler;
 
     private static BankIdOIDCClient bankIdOIDCClient;
-    private final JWTHandler JWTHandler;
 
     public static BankIdOIDCClient getInstance() {
         if (bankIdOIDCClient == null) {
@@ -41,19 +41,15 @@ public class BankIdOIDCClient {
     }
 
     private BankIdOIDCClient() {
-        JSONObject configuration = getJsonResponse(CONFIG_URL);
+        Client client = ClientBuilder.newClient();
+        Response response = client.target(CONFIG_URL).request().get();
+        JSONObject configuration =  new JSONObject(response.readEntity(String.class));
 
         this.authorizationEndpoint = configuration.getString("authorization_endpoint");
         this.token_endpoint = configuration.getString("token_endpoint");
         this.userinfo_endpoint = configuration.getString("userinfo_endpoint");
 
         JWTHandler = new JWTHandler(configuration.getString("jwks_uri"));
-    }
-
-    private JSONObject getJsonResponse(String url) {
-        Client client = ClientBuilder.newClient();
-        Response response = client.target(url).request().get();
-        return new JSONObject(response.readEntity(String.class));
     }
 
     public String createAuthenticationUrl() {
