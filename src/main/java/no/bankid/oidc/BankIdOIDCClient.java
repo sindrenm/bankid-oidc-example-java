@@ -23,9 +23,13 @@ public class BankIdOIDCClient {
 
     public static final String CONFIG_URL = "https://prototype.bankidnorge.no/bankid-oauth/oauth/.well-known/openid-configuration";
     public static final String CALLBACK_URL = "http://localhost:8080/callback";
-    public static final String CLIENT_ID = "JavaClient";
-    public static final String CLIENT_PWD = "1234";
-    public static final String AUTHORIZATION_ENDPOINT = "authorization_endpoint";
+
+    /**
+     * client_id og passord må legges inn her for at applikasjonen skal fungere.
+     * Ta kontakt med BankID Norge (developer@kantega.no) for å ta i bruk eksempelet.
+     */
+    public static final String CLIENT_ID = "<insert client_id>";
+    public static final String CLIENT_PWD = "<insert client password>";
 
     private final String authorizationEndpoint;
     private final String token_endpoint;
@@ -50,7 +54,7 @@ public class BankIdOIDCClient {
         Response response = client.target(CONFIG_URL).request().get();
         JSONObject configuration = new JSONObject(response.readEntity(String.class));
 
-        this.authorizationEndpoint = configuration.getString(AUTHORIZATION_ENDPOINT);
+        this.authorizationEndpoint = configuration.getString("authorization_endpoint");
         this.token_endpoint = configuration.getString("token_endpoint");
         this.userinfo_endpoint = configuration.getString("userinfo_endpoint");
 
@@ -113,6 +117,8 @@ public class BankIdOIDCClient {
 
         String jwsPayload = JWTHandler.getPayload(id_token);
         String username = new JSONObject(jwsPayload).getString("preferred_username");
+
+        new JSONObject("");
 
         return new User(username, access_token, jwsPayload);
     }
