@@ -18,18 +18,13 @@ import java.nio.charset.Charset;
 import java.util.UUID;
 
 import static java.net.URLEncoder.encode;
+import static no.bankid.oidc.ClientDefinition.CLIENT_ID;
+import static no.bankid.oidc.ClientDefinition.CLIENT_PWD;
 
 public class BankIdOIDCClient {
 
     public static final String CONFIG_URL = "https://prototype.bankidnorge.no/bankid-oauth/oauth/.well-known/openid-configuration";
     public static final String CALLBACK_URL = "http://localhost:8080/callback";
-
-    /**
-     * client_id og passord må legges inn her for at applikasjonen skal fungere.
-     * Ta kontakt med BankID Norge (developer@kantega.no) for å ta i bruk eksempelet.
-     */
-    public static final String CLIENT_ID = "<insert client_id>";
-    public static final String CLIENT_PWD = "<insert client password>";
 
     private final String authorizationEndpoint;
     private final String token_endpoint;
