@@ -25,6 +25,9 @@ import static java.net.URLEncoder.encode;
 public class BankIdOIDCClient {
 
     public static final String CONFIG_URL = "https://prototype.bankidnorge.no/bankid-oauth/oauth/.well-known/openid-configuration";
+    public static final String CALLBACK_URL = "http://localhost:8080/callback";
+    public static final String CLIENT_ID = "JavaClient";
+    public static final String CLIENT_PWD = "1234";
 
     private final String authorizationEndpoint;
     private final String token_endpoint;
@@ -43,7 +46,7 @@ public class BankIdOIDCClient {
     private BankIdOIDCClient() {
         Client client = ClientBuilder.newClient();
         Response response = client.target(CONFIG_URL).request().get();
-        JSONObject configuration =  new JSONObject(response.readEntity(String.class));
+        JSONObject configuration = new JSONObject(response.readEntity(String.class));
 
         this.authorizationEndpoint = configuration.getString("authorization_endpoint");
         this.token_endpoint = configuration.getString("token_endpoint");
@@ -56,7 +59,7 @@ public class BankIdOIDCClient {
         String state = UUID.randomUUID().toString();
 
         return String.format("%s?client_id=%s&redirect_uri=%s&response_type=code&scope=openid&state=%s&nonce=%s",
-                authorizationEndpoint, "JavaClient", encoded("http://localhost:8080/callback"), encoded(state), "somecorrelationnonce");
+                authorizationEndpoint, CLIENT_ID, encoded(CALLBACK_URL), encoded(state), "somecorrelationnonce");
     }
 
     public static String encoded(String s) {
@@ -71,7 +74,7 @@ public class BankIdOIDCClient {
         HttpAuthenticationFeature basicAuth = HttpAuthenticationFeature.
                 basicBuilder()
                 .nonPreemptive()
-                .credentials("JavaClient", "1234")
+                .credentials(CLIENT_ID, CLIENT_PWD)
                 .build();
 
         ClientConfig clientConfig = new ClientConfig();
