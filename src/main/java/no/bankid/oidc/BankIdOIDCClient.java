@@ -113,8 +113,6 @@ public class BankIdOIDCClient {
         String jwsPayload = JWTHandler.getPayload(id_token);
         String username = new JSONObject(jwsPayload).getString("preferred_username");
 
-        new JSONObject("");
-
         return new User(username, access_token, jwsPayload);
     }
 
