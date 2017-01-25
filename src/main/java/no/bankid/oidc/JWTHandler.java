@@ -15,11 +15,11 @@ import java.util.List;
 /**
  * Created by kristofferskaret on 24.01.2017.
  */
-public class JWSHandler {
+public class JWTHandler {
 
     private final JWKSet publicKeys;
 
-    public JWSHandler(String jwsKeysUri) {
+    public JWTHandler(String jwsKeysUri) {
         try {
             publicKeys = JWKSet.load(new URL(jwsKeysUri));
         } catch (IOException e) {

@@ -32,7 +32,7 @@ public class BankIdOauthClient {
     private final String userinfo_endpoint;
 
     private static BankIdOauthClient bankIdOauthClient;
-    private final JWSHandler jwsHandler;
+    private final JWTHandler JWTHandler;
     private Object userInfo;
 
     public static BankIdOauthClient getInstance() {
@@ -50,7 +50,7 @@ public class BankIdOauthClient {
         this.token_endpoint = configuration.getString("token_endpoint");
         this.userinfo_endpoint = configuration.getString("userinfo_endpoint");
 
-        jwsHandler = new JWSHandler(configuration.getString("jwks_uri"));
+        JWTHandler = new JWTHandler(configuration.getString("jwks_uri"));
     }
 
     private JSONObject getJsonResponse(String url) {
@@ -100,7 +100,7 @@ public class BankIdOauthClient {
         String access_token = json.getString("access_token");
         String id_token = json.getString("id_token");
 
-        String jwsPayload = jwsHandler.getPayload(id_token);
+        String jwsPayload = JWTHandler.getPayload(id_token);
         return new User(access_token, jwsPayload);
     }
 
