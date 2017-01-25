@@ -1,6 +1,4 @@
-package no.bankid.oidc.web; /**
- * Created by kristofferskaret on 20.01.2017.
- */
+package no.bankid.oidc.web;
 
 import no.bankid.oidc.BankIdOIDCClient;
 import no.bankid.oidc.User;
@@ -38,7 +36,7 @@ public class WelcomeServlet extends HttpServlet {
             String userInfo = BankIdOIDCClient.getInstance().getUserInfo(user);
 
             response.getWriter()
-                    .append("<p>Du er logget inn.</p>")
+                    .append(String.format("<p>Du er logget inn som</p><p>%s</p>", user.getUsername()))
                     .append("<h2>Access token</h2>")
                     .append(String.format("<p>%s</p>", user.getAccessToken()))
                     .append("<h2>Id token</h2>")

@@ -12,9 +12,6 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.List;
 
-/**
- * Created by kristofferskaret on 24.01.2017.
- */
 public class JWTHandler {
 
     private final JWKSet publicKeys;

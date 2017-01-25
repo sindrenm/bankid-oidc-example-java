@@ -1,6 +1,4 @@
-package no.bankid.oidc.web; /**
- * Created by kristofferskaret on 20.01.2017.
- */
+package no.bankid.oidc.web;
 
 import no.bankid.oidc.BankIdOIDCClient;
 import no.bankid.oidc.User;

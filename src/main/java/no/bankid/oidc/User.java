@@ -1,14 +1,13 @@
 package no.bankid.oidc;
 
-/**
- * Created by kristofferskaret on 24.01.2017.
- */
 public class User {
 
+    private String username;
     private final String accessToken;
     private final String idTokenPayload;
 
-    public User(String accessToken, String idTokenPayload) {
+    public User(String username, String accessToken, String idTokenPayload) {
+        this.username = username;
         this.accessToken = accessToken;
         this.idTokenPayload = idTokenPayload;
     }
@@ -19,5 +18,9 @@ public class User {
 
     public String getIdTokenPayload() {
         return idTokenPayload;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

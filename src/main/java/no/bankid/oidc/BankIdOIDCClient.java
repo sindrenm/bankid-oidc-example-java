@@ -19,15 +19,13 @@ import java.util.UUID;
 
 import static java.net.URLEncoder.encode;
 
-/**
- * Created by kristofferskaret on 20.01.2017.
- */
 public class BankIdOIDCClient {
 
     public static final String CONFIG_URL = "https://prototype.bankidnorge.no/bankid-oauth/oauth/.well-known/openid-configuration";
     public static final String CALLBACK_URL = "http://localhost:8080/callback";
     public static final String CLIENT_ID = "JavaClient";
     public static final String CLIENT_PWD = "1234";
+    public static final String AUTHORIZATION_ENDPOINT = "authorization_endpoint";
 
     private final String authorizationEndpoint;
     private final String token_endpoint;
@@ -52,7 +50,7 @@ public class BankIdOIDCClient {
         Response response = client.target(CONFIG_URL).request().get();
         JSONObject configuration = new JSONObject(response.readEntity(String.class));
 
-        this.authorizationEndpoint = configuration.getString("authorization_endpoint");
+        this.authorizationEndpoint = configuration.getString(AUTHORIZATION_ENDPOINT);
         this.token_endpoint = configuration.getString("token_endpoint");
         this.userinfo_endpoint = configuration.getString("userinfo_endpoint");
 
@@ -114,7 +112,9 @@ public class BankIdOIDCClient {
         String id_token = json.getString("id_token");
 
         String jwsPayload = JWTHandler.getPayload(id_token);
-        return new User(access_token, jwsPayload);
+        String username = new JSONObject(jwsPayload).getString("preferred_username");
+
+        return new User(username, access_token, jwsPayload);
     }
 
     /**
