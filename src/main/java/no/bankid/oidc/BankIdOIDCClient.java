@@ -43,6 +43,10 @@ public class BankIdOIDCClient {
         return bankIdOIDCClient;
     }
 
+    /**
+     * Ved initialisering hentes OIDC-configuration fra CONFIG_URL.
+     * Denne inneholder blandt annet relevante endepunkter og informasjon om jwt-nøkkel.
+     */
     private BankIdOIDCClient() {
         Client client = ClientBuilder.newClient();
         Response response = client.target(CONFIG_URL).request().get();
@@ -52,9 +56,14 @@ public class BankIdOIDCClient {
         this.token_endpoint = configuration.getString("token_endpoint");
         this.userinfo_endpoint = configuration.getString("userinfo_endpoint");
 
+        // JWTHandler henter nøkkel fra uri definert i jwks_uri
         JWTHandler = new JWTHandler(configuration.getString("jwks_uri"));
     }
 
+    /**
+     * Bygger opp authentication url som det skal redirigeres til ved oppstart av autentiserings-prosessen.
+     * @return
+     */
     public String createAuthenticationUrl() {
         String state = UUID.randomUUID().toString();
 
@@ -70,6 +79,15 @@ public class BankIdOIDCClient {
         }
     }
 
+    /**
+     *
+     * Etter callback fra autentisering må authentication_code utveksles med access_token.
+     * Dette skjer som en POST mot token_endpoint.
+     * code leveres i body som er x-www-form-urlencoded
+     * Endepunktet krever basic auth.
+     *
+     * Her har vi valgt å legge access_token og id_token i et objekt User, som typisk kan legges på sesjon.
+     * */
     public User endAuthentication(String code) {
         HttpAuthenticationFeature basicAuth = HttpAuthenticationFeature.
                 basicBuilder()
@@ -99,6 +117,10 @@ public class BankIdOIDCClient {
         return new User(access_token, jwsPayload);
     }
 
+    /**
+     * Henter den beskyttede ressursen UserInfo ved bruk av access_token.
+     * 
+     */
     public String getUserInfo(User user) {
         Client client = ClientBuilder.newClient();
 
