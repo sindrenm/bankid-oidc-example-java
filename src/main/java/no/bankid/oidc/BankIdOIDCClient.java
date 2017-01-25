@@ -27,13 +27,11 @@ public class BankIdOIDCClient {
     public static final String CONFIG_URL = "https://prototype.bankidnorge.no/bankid-oauth/oauth/.well-known/openid-configuration";
 
     private final String authorizationEndpoint;
-    private final String issuer;
     private final String token_endpoint;
     private final String userinfo_endpoint;
 
     private static BankIdOIDCClient bankIdOIDCClient;
     private final JWTHandler JWTHandler;
-    private Object userInfo;
 
     public static BankIdOIDCClient getInstance() {
         if (bankIdOIDCClient == null) {
@@ -46,7 +44,6 @@ public class BankIdOIDCClient {
         JSONObject configuration = getJsonResponse(CONFIG_URL);
 
         this.authorizationEndpoint = configuration.getString("authorization_endpoint");
-        this.issuer = configuration.getString("issuer");
         this.token_endpoint = configuration.getString("token_endpoint");
         this.userinfo_endpoint = configuration.getString("userinfo_endpoint");
 
@@ -58,7 +55,6 @@ public class BankIdOIDCClient {
         Response response = client.target(url).request().get();
         return new JSONObject(response.readEntity(String.class));
     }
-
 
     public String createAuthenticationUrl() {
         String state = UUID.randomUUID().toString();
