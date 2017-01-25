@@ -119,7 +119,7 @@ public class BankIdOIDCClient {
 
     /**
      * Henter den beskyttede ressursen UserInfo ved bruk av access_token.
-     * 
+     *
      */
     public String getUserInfo(User user) {
         Client client = ClientBuilder.newClient();

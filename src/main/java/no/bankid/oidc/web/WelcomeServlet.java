@@ -18,36 +18,37 @@ public class WelcomeServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
+        /**
+         * Prøver å finne user på sesjonen. Hvis den ikke finnes presenteres lenke til login.
+         *
+         * Etter pålogging vil bruker redirrigeres tilbake hit med user på sesjon.
+         */
         User user = (User) request.getSession().getAttribute("user");
 
-        StringBuilder responseHtml = new StringBuilder();
+        response.getWriter().append("<html>")
+                .append("<head></head><body>")
+                .append("<h1>Velkommen til OpenID Connect testapp i Java</h1>");
 
         if (user == null) {
-            responseHtml.append("<html>")
-                    .append("<head></head><body>")
-                    .append("<h1>Welcome</h1>")
-                    .append("<p>Click login to login</p>")
-                    .append("<a href=\"/login\">Login</a>")
-                    .append("</body></html");
+            response.getWriter()
+                    .append("<p>Du er ikke logget inn.</p>")
+                    .append("<a href=\"/login\">Logg inn</a>");
         } else {
 
             String userInfo = BankIdOIDCClient.getInstance().getUserInfo(user);
 
-            responseHtml.append("<html>")
-                    .append("<head></head><body>")
-                    .append("<h1>Welcome</h1>")
-                    .append("<p>You are logged in.</p>")
+            response.getWriter()
+                    .append("<p>Du er logget inn.</p>")
                     .append("<h2>Access token</h2>")
                     .append(String.format("<p>%s</p>", user.getAccessToken()))
                     .append("<h2>Id token</h2>")
                     .append(String.format("<p>%s</p>", user.getIdTokenPayload()))
                     .append("<h2>User info</h2>")
                     .append(String.format("<p>%s</p>", userInfo))
-                    .append("<a href=\"/logout\">Logout</a>")
-                    .append("</body></html");
+                    .append("<a href=\"/logout\">Logout</a>");
         }
 
-
-        response.getOutputStream().print(responseHtml.toString());
+        response.getWriter()
+                .append("</body></html");
     }
 }
