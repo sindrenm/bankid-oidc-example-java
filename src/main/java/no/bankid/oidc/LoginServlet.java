@@ -2,8 +2,6 @@ package no.bankid.oidc; /**
  * Created by kristofferskaret on 20.01.2017.
  */
 
-import no.bankid.oidc.BankIdOauthClient;
-
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,7 +15,7 @@ public class LoginServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        String redirectUrl = BankIdOauthClient.getInstance().createAuthenticationUrl();
+        String redirectUrl = BankIdOIDCClient.getInstance().createAuthenticationUrl();
 
         response.sendRedirect(redirectUrl);
     }

@@ -28,7 +28,7 @@ public class WelcomeServlet extends HttpServlet {
                     .append("</body></html");
         } else {
 
-            String userInfo = BankIdOauthClient.getInstance().getUserInfo(user);
+            String userInfo = BankIdOIDCClient.getInstance().getUserInfo(user);
 
             responseHtml.append("<html>")
                     .append("<head></head><body>")

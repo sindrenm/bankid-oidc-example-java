@@ -22,7 +22,7 @@ import static java.net.URLEncoder.encode;
 /**
  * Created by kristofferskaret on 20.01.2017.
  */
-public class BankIdOauthClient {
+public class BankIdOIDCClient {
 
     public static final String CONFIG_URL = "https://prototype.bankidnorge.no/bankid-oauth/oauth/.well-known/openid-configuration";
 
@@ -31,18 +31,18 @@ public class BankIdOauthClient {
     private final String token_endpoint;
     private final String userinfo_endpoint;
 
-    private static BankIdOauthClient bankIdOauthClient;
+    private static BankIdOIDCClient bankIdOIDCClient;
     private final JWTHandler JWTHandler;
     private Object userInfo;
 
-    public static BankIdOauthClient getInstance() {
-        if (bankIdOauthClient == null) {
-            bankIdOauthClient = new BankIdOauthClient();
+    public static BankIdOIDCClient getInstance() {
+        if (bankIdOIDCClient == null) {
+            bankIdOIDCClient = new BankIdOIDCClient();
         }
-        return bankIdOauthClient;
+        return bankIdOIDCClient;
     }
 
-    private BankIdOauthClient() {
+    private BankIdOIDCClient() {
         JSONObject configuration = getJsonResponse(CONFIG_URL);
 
         this.authorizationEndpoint = configuration.getString("authorization_endpoint");
