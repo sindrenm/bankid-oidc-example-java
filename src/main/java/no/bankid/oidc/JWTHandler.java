@@ -6,6 +6,7 @@ import com.nimbusds.jose.crypto.RSASSAVerifier;
 import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
+import org.json.JSONObject;
 
 import java.io.IOException;
 import java.net.URL;
@@ -26,7 +27,7 @@ public class JWTHandler {
         }
     }
 
-    public String getPayload(String id_token) {
+    public JSONObject getPayload(String id_token) {
         try {
             List<JWK> keys = publicKeys.getKeys();
 
@@ -37,7 +38,7 @@ public class JWTHandler {
                 System.out.println("Signature in jwk could not be verified.");
                 // TODO Should be handled
             }
-            return jwsObject.getPayload().toString();
+            return new JSONObject(jwsObject.getPayload().toString());
 
         } catch (ParseException e) {
             throw new RuntimeException(e);

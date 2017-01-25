@@ -59,6 +59,7 @@ public class BankIdOIDCClient {
 
     /**
      * Bygger opp authentication url som det skal redirigeres til ved oppstart av autentiserings-prosessen.
+     *
      * @return
      */
     public String createAuthenticationUrl() {
@@ -77,20 +78,20 @@ public class BankIdOIDCClient {
     }
 
     /**
-     *
      * Etter callback fra autentisering må authentication_code utveksles med access_token.
      * Dette skjer som en POST mot token_endpoint.
      * code leveres i body som er x-www-form-urlencoded
      * Endepunktet krever basic auth.
-     *
+     * <p>
      * Her har vi valgt å legge access_token og id_token i et objekt User, som typisk kan legges på sesjon.
-     * */
+     */
     public User endAuthentication(String code) {
-        HttpAuthenticationFeature basicAuth = HttpAuthenticationFeature.
-                basicBuilder()
-                .nonPreemptive()
-                .credentials(CLIENT_ID, CLIENT_PWD)
-                .build();
+        HttpAuthenticationFeature basicAuth =
+                HttpAuthenticationFeature
+                        .basicBuilder()
+                        .nonPreemptive()
+                        .credentials(CLIENT_ID, CLIENT_PWD)
+                        .build();
 
         ClientConfig clientConfig = new ClientConfig();
         clientConfig.register(basicAuth);
@@ -110,17 +111,15 @@ public class BankIdOIDCClient {
         String access_token = json.getString("access_token");
         String id_token = json.getString("id_token");
 
-        String jwsPayload = JWTHandler.getPayload(id_token);
-        String username = new JSONObject(jwsPayload).getString("preferred_username");
+        JSONObject jwsPayload = JWTHandler.getPayload(id_token);
 
-        return new User(username, access_token, jwsPayload);
+        return new User(access_token, jwsPayload);
     }
 
     /**
      * Henter den beskyttede ressursen UserInfo ved bruk av access_token.
-     *
      */
-    public String getUserInfo(User user) {
+    public JSONObject getUserInfo(User user) {
         Client client = ClientBuilder.newClient();
 
         Feature feature = OAuth2ClientSupport.feature(user.getAccessToken());
@@ -128,6 +127,6 @@ public class BankIdOIDCClient {
 
         Response response = client.target(userinfo_endpoint).request().get();
 
-        return response.readEntity(String.class);
+        return new JSONObject(response.readEntity(String.class));
     }
 }

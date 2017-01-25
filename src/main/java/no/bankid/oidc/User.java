@@ -1,13 +1,13 @@
 package no.bankid.oidc;
 
+import org.json.JSONObject;
+
 public class User {
 
-    private String username;
     private final String accessToken;
-    private final String idTokenPayload;
+    private final JSONObject idTokenPayload;
 
-    public User(String username, String accessToken, String idTokenPayload) {
-        this.username = username;
+    public User(String accessToken, JSONObject idTokenPayload) {
         this.accessToken = accessToken;
         this.idTokenPayload = idTokenPayload;
     }
@@ -16,11 +16,11 @@ public class User {
         return accessToken;
     }
 
-    public String getIdTokenPayload() {
+    public JSONObject getIdTokenPayload() {
         return idTokenPayload;
     }
 
     public String getUsername() {
-        return username;
+        return idTokenPayload.getString("preferred_username");
     }
 }
