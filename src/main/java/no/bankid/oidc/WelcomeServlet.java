@@ -27,13 +27,19 @@ public class WelcomeServlet extends HttpServlet {
                     .append("<a href=\"/login\">Login</a>")
                     .append("</body></html");
         } else {
+
+            String userInfo = BankIdOauthClient.getInstance().getUserInfo(user);
+
             responseHtml.append("<html>")
                     .append("<head></head><body>")
                     .append("<h1>Welcome</h1>")
+                    .append("<p>You are logged in.</p>")
                     .append("<h2>Access token</h2>")
                     .append(String.format("<p>%s</p>", user.getAccessToken()))
                     .append("<h2>Id token</h2>")
-                    .append(String.format("<p>%s</p>", user.getIdToken()))
+                    .append(String.format("<p>%s</p>", user.getIdTokenPayload()))
+                    .append("<h2>User info</h2>")
+                    .append(String.format("<p>%s</p>", userInfo))
                     .append("<a href=\"/logout\">Logout</a>")
                     .append("</body></html");
         }

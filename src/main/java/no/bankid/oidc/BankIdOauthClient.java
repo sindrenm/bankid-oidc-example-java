@@ -1,28 +1,20 @@
 package no.bankid.oidc;
 
-import com.nimbusds.jose.JOSEException;
-import com.nimbusds.jose.JWSObject;
-import com.nimbusds.jose.crypto.RSASSAVerifier;
-import com.nimbusds.jose.jwk.JWK;
-import com.nimbusds.jose.jwk.JWKSet;
-import com.nimbusds.jose.jwk.RSAKey;
 import org.glassfish.jersey.client.ClientConfig;
 import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
+import org.glassfish.jersey.client.oauth2.OAuth2ClientSupport;
 import org.json.JSONObject;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
 import javax.ws.rs.client.Entity;
 import javax.ws.rs.client.WebTarget;
+import javax.ws.rs.core.Feature;
 import javax.ws.rs.core.MultivaluedHashMap;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.core.Response;
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
-import java.net.URL;
 import java.nio.charset.Charset;
-import java.text.ParseException;
-import java.util.List;
 import java.util.UUID;
 
 import static java.net.URLEncoder.encode;
@@ -40,7 +32,8 @@ public class BankIdOauthClient {
     private final String userinfo_endpoint;
 
     private static BankIdOauthClient bankIdOauthClient;
-    private final JWKSet publicKeys;
+    private final JWSHandler jwsHandler;
+    private Object userInfo;
 
     public static BankIdOauthClient getInstance() {
         if (bankIdOauthClient == null) {
@@ -57,16 +50,7 @@ public class BankIdOauthClient {
         this.token_endpoint = configuration.getString("token_endpoint");
         this.userinfo_endpoint = configuration.getString("userinfo_endpoint");
 
-        String jwks_uri = configuration.getString("jwks_uri");
-
-        try {
-            publicKeys = JWKSet.load(new URL(jwks_uri));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        }
-
+        jwsHandler = new JWSHandler(configuration.getString("jwks_uri"));
     }
 
     private JSONObject getJsonResponse(String url) {
@@ -116,19 +100,18 @@ public class BankIdOauthClient {
         String access_token = json.getString("access_token");
         String id_token = json.getString("id_token");
 
-        try {
-            List<JWK> keys = publicKeys.getKeys();
+        String jwsPayload = jwsHandler.getPayload(id_token);
+        return new User(access_token, jwsPayload);
+    }
 
-            JWSObject jwsObject = JWSObject.parse(id_token);
-            jwsObject.verify(new RSASSAVerifier((RSAKey) keys.get(0)));
+    public String getUserInfo(User user) {
+        Client client = ClientBuilder.newClient();
 
-            String jwsPayload = jwsObject.getPayload().toString();
+        Feature feature = OAuth2ClientSupport.feature(user.getAccessToken());
+        client.register(feature);
 
-            return new User(access_token, jwsPayload);
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        } catch (JOSEException e) {
-            throw new RuntimeException(e);
-        }
+        Response response = client.target(userinfo_endpoint).request().get();
+
+        return response.readEntity(String.class);
     }
 }

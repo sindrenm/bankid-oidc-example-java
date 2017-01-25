@@ -6,18 +6,18 @@ package no.bankid.oidc;
 public class User {
 
     private final String accessToken;
-    private final String idToken;
+    private final String idTokenPayload;
 
-    public User(String accessToken, String idToken) {
+    public User(String accessToken, String idTokenPayload) {
         this.accessToken = accessToken;
-        this.idToken = idToken;
+        this.idTokenPayload = idTokenPayload;
     }
 
     public String getAccessToken() {
         return accessToken;
     }
 
-    public String getIdToken() {
-        return idToken;
+    public String getIdTokenPayload() {
+        return idTokenPayload;
     }
 }
