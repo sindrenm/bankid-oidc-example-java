@@ -1,7 +1,7 @@
 # BankID Test Application for BankID Norge AS
 This is a Java based test application for authenticating a user with BankID OpenID Connect Server (BID OIDC) developed for BankID Norge AS.
 When the user is authenticated you will see the result from a call to UserInfo RESTful service and the contents of the id_token which was returned from BID OIDC.
-`
+
 ## Process flow
 The application examplifies all steps of the OIDC authentication process.
 1. Fetch configuration from OIDC. GET to a non protected URL, such as 

@@ -3,7 +3,7 @@ package no.bankid.oidc;
 class ClientDefinition {
 
     /**
-     * Client_id and password must be inseted here for the appliction to work.
+     * Client_id and password must be inserted here for the application to work.
      * <p>
      * Make contact with BankID Norge (developer@bankid.no) to retrieve the information needed.
      */

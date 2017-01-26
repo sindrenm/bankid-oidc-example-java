@@ -58,7 +58,7 @@ public class BankIdOIDCClient {
     }
 
     /**
-     * Builds the authentication url, where the user shall be redirected upon starting of the autentication process.
+     * Builds the authentication url, where the user shall be redirected upon starting of the authentication process.
      */
     public String createAuthenticationUrl() {
         // state is a value used to maintain state between the request and the callback. Actually not used in this application.
