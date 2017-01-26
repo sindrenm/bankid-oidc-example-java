@@ -41,8 +41,8 @@ public class BankIdOIDCClient {
     }
 
     /**
-     * Ved initialisering hentes OIDC-configuration fra CONFIG_URL.
-     * Denne inneholder blandt annet relevante endepunkter og informasjon om jwt-nøkkel.
+     * On initialization the OIDC configuration is fetched from CONFIG_URL.
+     * This contains relevant endpoints and information about the jwt (id_token) key.
      */
     private BankIdOIDCClient() {
         Client client = ClientBuilder.newClient();
@@ -53,14 +53,13 @@ public class BankIdOIDCClient {
         this.token_endpoint = configuration.getString("token_endpoint");
         this.userinfo_endpoint = configuration.getString("userinfo_endpoint");
 
-        // JWTHandler henter nøkkel fra uri definert i jwks_uri
+        // JWTHandler fetches the key from jwks_uri
         JWTHandler = new JWTHandler(configuration.getString("jwks_uri"));
     }
 
     /**
-     * Bygger opp authentication url som det skal redirigeres til ved oppstart av autentiserings-prosessen.
+     * Builds the authentication url, where the user shall be redirected upon starting of the autentication process.
      *
-     * @return
      */
     public String createAuthenticationUrl() {
         String state = UUID.randomUUID().toString();
@@ -78,12 +77,14 @@ public class BankIdOIDCClient {
     }
 
     /**
-     * Etter callback fra autentisering må authentication_code utveksles med access_token.
-     * Dette skjer som en POST mot token_endpoint.
-     * code leveres i body som er x-www-form-urlencoded
-     * Endepunktet krever basic auth.
-     * <p>
-     * Her har vi valgt å legge access_token og id_token i et objekt User, som typisk kan legges på sesjon.
+     * After callback from oidc, the authentication_code must be exchanged with the access_token.
+     *
+     * This will be done with a POST against the token_endpoint.
+     * the 'code' is attached in the body (x-www-form-urlencoded)
+     * The endpoint requires basic auth.
+     *
+     * Finally, we put the access_token and id_token in a User object. It may typically be stored on the session.
+     *
      */
     public User endAuthentication(String code) {
         HttpAuthenticationFeature basicAuth =
@@ -117,7 +118,7 @@ public class BankIdOIDCClient {
     }
 
     /**
-     * Henter den beskyttede ressursen UserInfo ved bruk av access_token.
+     * Fetch the protected resource UserInfo by using the access_token.
      */
     public JSONObject getUserInfo(User user) {
         Client client = ClientBuilder.newClient();

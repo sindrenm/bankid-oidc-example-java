@@ -19,9 +19,10 @@ public class WelcomeServlet extends HttpServlet {
             throws IOException {
 
         /**
-         * Prøver å finne user på sesjonen. Hvis den ikke finnes presenteres lenke til login.
+         * Tries to find the user on the session. If no user can be found, a login link is presented.
          *
-         * Etter pålogging vil bruker redirrigeres tilbake hit med user på sesjon.
+         * After login the user will be redirected back to this servlet with the user on the session.
+         *
          */
         User user = (User) request.getSession().getAttribute("user");
 
@@ -56,7 +57,7 @@ public class WelcomeServlet extends HttpServlet {
     private String prettifyJSON(JSONObject json) {
         StringBuilder htmlString = new StringBuilder();
         htmlString.append("<p>{</p>");
-        for(String key : json.keySet()) {
+        for (String key : json.keySet()) {
             htmlString.append(String.format("<p>&nbsp;&nbsp;&nbsp;&nbsp;<b>%s:</b> %s</p>", key, json.get(key)));
         }
         htmlString.append("<p>}</p>");
