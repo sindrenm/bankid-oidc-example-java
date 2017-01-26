@@ -18,13 +18,9 @@ import java.nio.charset.Charset;
 import java.util.UUID;
 
 import static java.net.URLEncoder.encode;
-import static no.bankid.oidc.ClientDefinition.CLIENT_ID;
-import static no.bankid.oidc.ClientDefinition.CLIENT_PWD;
+import static no.bankid.oidc.Configuration.*;
 
 public class BankIdOIDCClient {
-
-    private static final String CONFIG_URL = "https://prototype.bankidnorge.no/bankid-oauth/oauth/.well-known/openid-configuration";
-    private static final String CALLBACK_URL = "http://localhost:8080/callback";
 
     private final String authorizationEndpoint;
     private final String token_endpoint;

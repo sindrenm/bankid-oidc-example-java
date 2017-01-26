@@ -6,7 +6,7 @@ When the user is authenticated you will see the result from a call to UserInfo R
 The application examplifies all steps of the OIDC authentication process.
 
 1. Fetch configuration from OIDC. GET to a non protected URL, such as 
-   https://prototype.bankidnorge.no/bankid-oauth/oauth/.well-known/openid-configuration
+   https://preprod.bankidapis.no/oidc/oauth/.well-known/openid-configuration
    The configuration contains information such as relevant endpoints, and public key for the id_token (JWT).
 
 2. Redirect to the authentication URL.
@@ -20,11 +20,7 @@ To be able to run the application you will need to edit the client_id and client
 Contact BankID Norge (developer@bankid.no) to retrieve the appropriate settings.
 
 ```
-<<<<<<< HEAD
-public class ClientDefinition {
-=======
-class ClientDefinition {
->>>>>>> Readme
+class Configuration {
 
     /**
      * Client_id and password must be inseted here for the appliction to work.
