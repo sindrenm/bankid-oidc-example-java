@@ -17,7 +17,7 @@ public class WelcomeServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws IOException {
 
-        /**
+        /*
          * Tries to find the user on the session. If no user can be found, a login link is presented.
          *
          * After login the user will be redirected back to this servlet with the user on the session.

@@ -23,8 +23,8 @@ import static no.bankid.oidc.ClientDefinition.CLIENT_PWD;
 
 public class BankIdOIDCClient {
 
-    public static final String CONFIG_URL = "https://prototype.bankidnorge.no/bankid-oauth/oauth/.well-known/openid-configuration";
-    public static final String CALLBACK_URL = "http://localhost:8080/callback";
+    private static final String CONFIG_URL = "https://prototype.bankidnorge.no/bankid-oauth/oauth/.well-known/openid-configuration";
+    private static final String CALLBACK_URL = "http://localhost:8080/callback";
 
     private final String authorizationEndpoint;
     private final String token_endpoint;
@@ -68,7 +68,7 @@ public class BankIdOIDCClient {
                 authorizationEndpoint, CLIENT_ID, encoded(CALLBACK_URL), encoded(state), "somecorrelationnonce");
     }
 
-    public static String encoded(String s) {
+    private static String encoded(String s) {
         try {
             return encode(s, Charset.forName("UTF-8").name());
         } catch (UnsupportedEncodingException e) {

@@ -13,7 +13,7 @@ import java.net.URL;
 import java.text.ParseException;
 import java.util.List;
 
-public class JWTHandler {
+class JWTHandler {
 
     private final JWKSet publicKeys;
 

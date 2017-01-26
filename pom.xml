@@ -13,7 +13,7 @@
             <scope>provided</scope>
         </dependency>
         <!--
-        Jersey benyttes her til all integrasjon
+        Jersey is used for all integration
         -->
         <dependency>
             <groupId>org.glassfish.jersey.core</groupId>
@@ -21,7 +21,7 @@
             <version>2.25</version>
         </dependency>
         <!--
-        Legger til støtte for å bruke oauth2 som autentiseringsmekanisme (access_token)
+        Add support for oauth2 as authentication mecanism (access_token)
         -->
         <dependency>
             <groupId>org.glassfish.jersey.security</groupId>
@@ -29,7 +29,7 @@
             <version>2.25</version>
         </dependency>
         <!--
-        Benyttes til parsing av json
+        Used for parsing of json
         -->
         <dependency>
             <groupId>org.json</groupId>
@@ -37,7 +37,7 @@
             <version>20160810</version>
         </dependency>
         <!--
-        Støtte for behandling av jwt
+        Support for jwt
         -->
         <dependency>
             <groupId>com.nimbusds</groupId>

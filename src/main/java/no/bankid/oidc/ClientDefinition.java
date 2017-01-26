@@ -1,6 +1,6 @@
 package no.bankid.oidc;
 
-public class ClientDefinition {
+class ClientDefinition {
 
     /**
      * Client_id and password must be inseted here for the appliction to work.
