@@ -59,7 +59,6 @@ public class BankIdOIDCClient {
 
     /**
      * Builds the authentication url, where the user shall be redirected upon starting of the autentication process.
-     *
      */
     public String createAuthenticationUrl() {
         // state is a value used to maintain state between the request and the callback. Actually not used in this application.
@@ -79,13 +78,12 @@ public class BankIdOIDCClient {
 
     /**
      * After callback from oidc, the authentication_code must be exchanged with the access_token.
-     *
+     * <p>
      * This will be done with a POST against the token_endpoint.
      * the 'code' is attached in the body (x-www-form-urlencoded)
      * The endpoint requires basic auth.
-     *
+     * <p>
      * Finally, we put the access_token and id_token in a User object. It may typically be stored on the session.
-     *
      */
     public User endAuthentication(String code) {
         HttpAuthenticationFeature basicAuth =
