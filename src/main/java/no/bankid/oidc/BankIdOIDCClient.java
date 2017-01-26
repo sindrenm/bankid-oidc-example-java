@@ -62,6 +62,7 @@ public class BankIdOIDCClient {
      *
      */
     public String createAuthenticationUrl() {
+        // state is a value used to maintain state between the request and the callback. Actually not used in this application.
         String state = UUID.randomUUID().toString();
 
         return String.format("%s?client_id=%s&redirect_uri=%s&response_type=code&scope=openid&state=%s&nonce=%s",
