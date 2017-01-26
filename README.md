@@ -4,11 +4,15 @@ When the user is authenticated you will see the result from a call to UserInfo R
 
 ## Process flow
 The application examplifies all steps of the OIDC authentication process.
+
 1. Fetch configuration from OIDC. GET to a non protected URL, such as 
    https://prototype.bankidnorge.no/bankid-oauth/oauth/.well-known/openid-configuration
    The configuration contains information such as relevant endpoints, and public key for the id_token (JWT).
+
 2. Redirect to the authentication URL.
+
 3. Handle the callback from UIDC. The callback contains an attribute *access_code* which needs to be exchanged with the *access_token* (POST to OIDC)
+
 4. Fetch user info. Finally we use the *access_token* to fetch a protected resource, in this case the user info provided by BID OIDC.
 
 ## Build and run
