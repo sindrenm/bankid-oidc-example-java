@@ -1,29 +1,44 @@
 # BankID Test Application for BankID Norge AS
 This is a Java based test application for authenticating a user with BankID OpenID Connect Server (BID OIDC) developed for BankID Norge AS.
 When the user is authenticated you will see the result from a call to UserInfo RESTful service and the contents of the id_token which was returned from BID OIDC.
+`
+## Process flow
+The application examplifies all steps of the OIDC authentication process.
+1. Fetch configuration from OIDC. GET to a non protected URL, such as 
+https://prototype.bankidnorge.no/bankid-oauth/oauh/.well-known/openid-configuration
+The configuration contains information such as relevant endpoints, and public key for the id_token (JWT).
+2. Redirect to the authentication URL.
+3. Handle the callback from UIDC. The callback contains an attribute *access_code* which needs to be exchanged with the *access_token* (POST to OIDC)
+4. Fetch user info. Finally we use the *access_token* to fetch a protected resource, in this case the user info provided by BID OIDC.
 
-## Configuration
+## Build and run
 To be able to run the application you will need to edit the client_id and client_password in the source code.
 Contact BankID Norge (developer@bankid.no) to retrieve the appropriate settings.
 
 ```
+<<<<<<< HEAD
 public class ClientDefinition {
+=======
+class ClientDefinition {
+>>>>>>> Readme
 
     /**
-     * client_id og passord må legges inn her for at applikasjonen skal fungere.
-     * Ta kontakt med BankID Norge (developer@kantega.no) for å ta i bruk eksempelet.
+     * Client_id and password must be inseted here for the appliction to work.
+     * <p>
+     * Make contact with BankID Norge (developer@bankid.no) to retrieve the information needed.
      */
     public static final String CLIENT_ID = "<insert client_id>";
     public static final String CLIENT_PWD = "<insert client password>";
 }
 ```
 
-## Build and run
-With maven and jetty
+
+Run with maven and jetty
 ```
 mvn clean install
 mvn jetty:run
 ```
+
 
 ## Dependencies
 This example application uses the following libraries
