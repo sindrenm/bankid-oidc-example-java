@@ -99,6 +99,7 @@ public class BankIdOIDCClient {
         MultivaluedMap<String, String> formData = new MultivaluedHashMap<String, String>();
         formData.add("code", code);
         formData.add("grant_type", "authorization_code");
+        formData.add("redirect_uri", CALLBACK_URL);
 
         Response response = target.request().post(Entity.form(formData));
 
