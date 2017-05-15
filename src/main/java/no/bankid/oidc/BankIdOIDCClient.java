@@ -60,8 +60,8 @@ public class BankIdOIDCClient {
         // state is a value used to maintain state between the request and the callback. Actually not used in this application.
         String state = UUID.randomUUID().toString();
 
-        return String.format("%s?client_id=%s&redirect_uri=%s&response_type=code&scope=openid&state=%s&nonce=%s",
-                authorizationEndpoint, CLIENT_ID, encoded(CALLBACK_URL), encoded(state), "somecorrelationnonce");
+        return String.format("%s?client_id=%s&redirect_uri=%s&response_type=%s&scope=%s&state=%s&nonce=%s",
+                authorizationEndpoint, CLIENT_ID, encoded(CALLBACK_URL), "code", SCOPE, encoded(state), "somecorrelationnonce");
     }
 
     private static String encoded(String s) {

@@ -5,6 +5,8 @@ class Configuration {
     public static final String CONFIG_URL = "https://preprod.bankidapis.no/oidc/oauth/.well-known/openid-configuration";
     public static final String CALLBACK_URL = "http://localhost:8080/callback";
 
+    public static final String SCOPE = "openid";
+
     /**
      * Client_id and password must be inserted here for the application to work.
      * <p>
