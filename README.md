@@ -17,7 +17,7 @@ The application examplifies all steps of the OIDC authentication process.
 
 ## Build and run
 To be able to run the application you will need to edit the client_id and client_password in the source code.
-Contact BankID Norge (developer@bankid.no) to retrieve the appropriate settings.
+Contact BankID Norge (developer@bankidnorge.no) to retrieve the appropriate settings.
 
 ```
 class Configuration {
