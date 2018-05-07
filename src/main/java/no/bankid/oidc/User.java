@@ -20,7 +20,6 @@ public class User {
         return idTokenPayload;
     }
 
-    public String getUsername() {
-        return idTokenPayload.getString("preferred_username");
-    }
+    public String getPreferredUsername() { return idTokenPayload.getString("preferred_username"); }
+
 }

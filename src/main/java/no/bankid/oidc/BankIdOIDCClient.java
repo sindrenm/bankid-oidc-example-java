@@ -1,7 +1,5 @@
 package no.bankid.oidc;
 
-import org.glassfish.jersey.client.ClientConfig;
-import org.glassfish.jersey.client.authentication.HttpAuthenticationFeature;
 import org.glassfish.jersey.client.oauth2.OAuth2ClientSupport;
 import org.json.JSONObject;
 
@@ -78,30 +76,23 @@ public class BankIdOIDCClient {
      * This will be done with a POST against the token_endpoint.
      * the 'code' is attached in the body (x-www-form-urlencoded)
      * The endpoint requires basic auth.
+     * https://confluence.bankidnorge.no/confluence/pdoidcl/technical-documentation/rest-api/token
      * <p>
      * Finally, we put the access_token and id_token in a User object. It may typically be stored on the session.
      */
     public User endAuthentication(String code) {
-        HttpAuthenticationFeature basicAuth =
-                HttpAuthenticationFeature
-                        .basicBuilder()
-                        .nonPreemptive()
-                        .credentials(CLIENT_ID, CLIENT_PWD)
-                        .build();
-
-        ClientConfig clientConfig = new ClientConfig();
-        clientConfig.register(basicAuth);
-
-        Client client = ClientBuilder.newClient(clientConfig);
+        Client client = ClientBuilder.newClient();
 
         WebTarget target = client.target(token_endpoint);
 
         MultivaluedMap<String, String> formData = new MultivaluedHashMap<String, String>();
-        formData.add("code", code);
         formData.add("grant_type", "authorization_code");
+        formData.add("code", code);
         formData.add("redirect_uri", CALLBACK_URL);
 
-        Response response = target.request().post(Entity.form(formData));
+        Response response = target.request()
+                .header("Authorization", "Basic " + java.util.Base64.getEncoder().encodeToString((CLIENT_ID + ":" + CLIENT_SECRET).getBytes()))
+                .post(Entity.form(formData));
 
         JSONObject json = new JSONObject(response.readEntity(String.class));
 
@@ -124,6 +115,7 @@ public class BankIdOIDCClient {
 
         Response response = client.target(userinfo_endpoint).request().get();
 
-        return new JSONObject(response.readEntity(String.class));
+        return JWTHandler.getPayload(response.readEntity(String.class));
     }
+
 }

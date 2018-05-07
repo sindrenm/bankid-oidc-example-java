@@ -38,6 +38,7 @@ class JWTHandler {
                 System.out.println("Signature in jwk could not be verified.");
                 // TODO Should be handled
             }
+
             return new JSONObject(jwsObject.getPayload().toString());
 
         } catch (ParseException e) {

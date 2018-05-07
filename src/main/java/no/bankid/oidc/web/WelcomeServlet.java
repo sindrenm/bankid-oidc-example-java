@@ -39,7 +39,7 @@ public class WelcomeServlet extends HttpServlet {
             JSONObject idTokenPayload = user.getIdTokenPayload();
 
             response.getWriter()
-                    .append(String.format("<p>Du er logget inn som</p><p>%s</p>", user.getUsername()))
+                    .append(String.format("<p>Du er logget inn som</p><p>%s</p>", user.getPreferredUsername()))
                     .append("<h2>Access token</h2>")
                     .append(String.format("<p>%s</p>", user.getAccessToken()))
                     .append("<h2>Id token</h2>")
