@@ -22,4 +22,6 @@ public class User {
 
     public String getPreferredUsername() { return idTokenPayload.getString("preferred_username"); }
 
+    public String getName() { return idTokenPayload.getString( "name"); }
+
 }
