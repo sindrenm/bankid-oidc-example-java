@@ -39,8 +39,10 @@ public class BankIdOIDCClient {
      * This contains relevant endpoints and information about the jwt (id_token) key.
      */
     private BankIdOIDCClient() {
+        // Fetch .well-known-configuration
         Client client = ClientBuilder.newClient();
         Response response = client.target(CONFIG_URL).request().get();
+
         JSONObject configuration = new JSONObject(response.readEntity(String.class));
 
         this.authorizationEndpoint = configuration.getString("authorization_endpoint");
@@ -58,16 +60,9 @@ public class BankIdOIDCClient {
         // state is a value used to maintain state between the request and the callback. Actually not used in this application.
         String state = UUID.randomUUID().toString();
 
-        return String.format("%s?client_id=%s&redirect_uri=%s&response_type=%s&scope=%s&state=%s&nonce=%s",
-                authorizationEndpoint, CLIENT_ID, encoded(CALLBACK_URL), "code", SCOPE, encoded(state), "somecorrelationnonce");
-    }
-
-    private static String encoded(String s) {
-        try {
-            return encode(s, Charset.forName("UTF-8").name());
-        } catch (UnsupportedEncodingException e) {
-            throw new IllegalStateException(e);
-        }
+        return String.format("%s?client_id=%s&redirect_uri=%s&response_type=%s&scope=%s&state=%s&nonce=%s&login_hint=%s&acr_values=%s",
+                authorizationEndpoint, CLIENT_ID, encoded(CALLBACK_URL), "code", encoded(SCOPE), encoded(state),
+                "somecorrelationnonce",encoded(LOGIN_HINT),encoded(ACR_VALUES));
     }
 
     /**
@@ -99,9 +94,7 @@ public class BankIdOIDCClient {
         String access_token = json.getString("access_token");
         String id_token = json.getString("id_token");
 
-        JSONObject jwsPayload = JWTHandler.getPayload(id_token);
-
-        return new User(access_token, jwsPayload);
+        return new User(access_token, JWTHandler.getPayload(access_token), id_token, JWTHandler.getPayload(id_token));
     }
 
     /**
@@ -114,8 +107,23 @@ public class BankIdOIDCClient {
         client.register(feature);
 
         Response response = client.target(userinfo_endpoint).request().get();
-
-        return JWTHandler.getPayload(response.readEntity(String.class));
+        if (response.getStatus()==401) {
+            return null;
+        } else
+            return JWTHandler.getPayload(response.readEntity(String.class));
     }
+
+
+    /**
+     * Set utf-8-encoding for string.
+     */
+    private static String encoded(String s) {
+        try {
+            return encode(s, Charset.forName("UTF-8").name());
+        } catch (UnsupportedEncodingException e) {
+            throw new IllegalStateException(e);
+        }
+    }
+
 
 }

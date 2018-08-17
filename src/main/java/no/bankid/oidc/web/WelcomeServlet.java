@@ -35,20 +35,19 @@ public class WelcomeServlet extends HttpServlet {
                     .append("<a href=\"/login\">Logg inn</a>");
         } else {
 
-            // Userinfo is disabled in a small period until 25.06.2018
-            // JSONObject userInfo = BankIdOIDCClient.getInstance().getUserInfo(user);
-            JSONObject idTokenPayload = user.getIdTokenPayload();
+            JSONObject userInfo = BankIdOIDCClient.getInstance().getUserInfo(user);
 
-            response.getWriter()
-                    .append(String.format("<p>Du er logget inn som</p><p>%s</p>", user.getName()))
-                    .append("<h2>Access token</h2>")
-                    .append(String.format("<p>%s</p>", user.getAccessToken()))
-                    .append("<h2>Id token</h2>")
-                    .append(prettifyJSON(idTokenPayload))
-                    .append("<h2>User info</h2>")
-                    // Userinfo is disabled in a small period until 25.06.2018
-                    //.append(prettifyJSON(userInfo))
-                    .append("<a href=\"/logout\">Logout</a>");
+                response.getWriter()
+                        .append(String.format("<p>Du er logget inn som</p><p>%s</p>", user.getName()))
+                        .append("<h2>Access token</h2>")
+                        .append(String.format("<p>%s</p>", user.getAccessToken()))
+                        .append(prettifyJSON(user.getAccessTokenPayload()))
+                        .append("<h2>Id token</h2>")
+                        .append(String.format("<p>%s</p>", user.getIdToken()))
+                        .append(prettifyJSON(user.getIdTokenPayload()))
+                        .append("<h2>User info</h2>")
+                        .append((userInfo!=null ? prettifyJSON(userInfo) : "Userinfo unauthorized (missing scope-access?)"))
+                        .append("<p><a href=\"/logout\">Logout</a></p>");
         }
 
         response.getWriter()

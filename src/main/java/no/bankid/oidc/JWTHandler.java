@@ -20,30 +20,26 @@ class JWTHandler {
     public JWTHandler(String jwsKeysUri) {
         try {
             publicKeys = JWKSet.load(new URL(jwsKeysUri));
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (ParseException e) {
+        } catch (IOException | ParseException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public JSONObject getPayload(String id_token) {
+    public JSONObject getPayload(String jws) {
         try {
             List<JWK> keys = publicKeys.getKeys();
 
-            JWSObject jwsObject = JWSObject.parse(id_token);
+            JWSObject jwsObject = JWSObject.parse(jws);
             boolean signatureIsOK = jwsObject.verify(new RSASSAVerifier((RSAKey) keys.get(0)));
 
             if (!signatureIsOK) {
                 System.out.println("Signature in jwk could not be verified.");
-                // TODO Should be handled
+                // Should be handled
             }
 
             return new JSONObject(jwsObject.getPayload().toString());
 
-        } catch (ParseException e) {
-            throw new RuntimeException(e);
-        } catch (JOSEException e) {
+        } catch (ParseException | JOSEException e) {
             throw new RuntimeException(e);
         }
     }
