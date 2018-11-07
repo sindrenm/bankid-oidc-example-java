@@ -9,9 +9,7 @@ class Configuration {
      *  - Preprod: Might be unstable due to testing of forthcoming release.
      *  - Production
      */
-    public static final String CONFIG_URL = "https://oidc-current.bankidapis.no/auth/realms/current/.well-known/openid-configuration";
-    //public static final String CONFIG_URL = "https://oidc-preprod.bankidapis.no/auth/realms/preprod/.well-known/openid-configuration";
-    // public static final String CONFIG_URL = "https://oidc.bankidapis.no/auth/realms/prod/.well-known/openid-configuration";
+    public static final String CONFIG_URL = "https://oidc.bankidapis.no/auth/realms/prod/.well-known/openid-configuration";
 
     public static final String CALLBACK_URL = "https://localhost:8443/callback";
 
