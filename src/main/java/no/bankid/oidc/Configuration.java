@@ -53,7 +53,7 @@ class Configuration {
      * <p>
      * See https://confluence.bankidnorge.no/confluence/pdoidcl/release-notes/provisioning for details on how to receive this.
      */
-    public static final String CLIENT_ID = "<INSERT YOUR CLIENT-ID HERE>";
-    public static final String CLIENT_SECRET = "<INSERT YOUR CLIENT-SECRET HERE";
+    public static final String CLIENT_ID = System.getenv("OID_STUDENT_WORKSHOP_CLIENT_ID");
+    public static final String CLIENT_SECRET = System.getenv("OID_STUDENT_WORKSHOP_CLIENT_SECRET");
 
 }
